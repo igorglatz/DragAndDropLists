@@ -4,6 +4,7 @@ import 'package:drag_and_drop_lists/drag_and_drop_item_target.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_item_wrapper.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_list_interface.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class DragAndDropList implements DragAndDropListInterface {
@@ -31,6 +32,11 @@ class DragAndDropList implements DragAndDropListInterface {
   /// If this is not null, it will override that set in [DragAndDropLists.listDecoration].
   final Decoration? decoration;
 
+  /// [Axis] the DragAndDropList should follow.
+  /// Can be either [Axis.horizontal] or [Axis.vertical].
+  /// If this is not null, it will override that set in [DragAndDropLists.scrollDirection].
+  final Axis? scrollDirection;
+
   /// The vertical alignment of the contents in this list.
   /// If this is not null, it will override that set in [DragAndDropLists.verticalAlignment].
   final CrossAxisAlignment verticalAlignment;
@@ -48,19 +54,19 @@ class DragAndDropList implements DragAndDropListInterface {
   /// Set to false if it must remain fixed.
   final bool canDrag;
 
-  DragAndDropList({
-    required this.children,
-    this.header,
-    this.footer,
-    this.leftSide,
-    this.rightSide,
-    this.contentsWhenEmpty,
-    this.lastTarget,
-    this.decoration,
-    this.horizontalAlignment = MainAxisAlignment.start,
-    this.verticalAlignment = CrossAxisAlignment.start,
-    this.canDrag = true,
-  });
+  DragAndDropList(
+      {required this.children,
+      this.header,
+      this.footer,
+      this.leftSide,
+      this.rightSide,
+      this.contentsWhenEmpty,
+      this.lastTarget,
+      this.decoration,
+      this.horizontalAlignment = MainAxisAlignment.start,
+      this.verticalAlignment = CrossAxisAlignment.start,
+      this.canDrag = true,
+      this.scrollDirection});
 
   @override
   Widget generateWidget(DragAndDropBuilderParameters params) {
@@ -141,6 +147,7 @@ class DragAndDropList implements DragAndDropListInterface {
       contents.add(
         Expanded(
           child: SingleChildScrollView(
+            scrollDirection: scrollDirection ?? Axis.vertical,
             physics: NeverScrollableScrollPhysics(),
             child: Column(
               crossAxisAlignment: verticalAlignment,
@@ -154,6 +161,7 @@ class DragAndDropList implements DragAndDropListInterface {
       contents.add(
         Expanded(
           child: SingleChildScrollView(
+            scrollDirection: scrollDirection ?? Axis.vertical,
             physics: NeverScrollableScrollPhysics(),
             child: Column(
               mainAxisSize: MainAxisSize.max,
